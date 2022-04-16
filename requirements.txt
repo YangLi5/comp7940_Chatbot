@@ -1,3 +1,0 @@
-telegram
-configparser
-redis
