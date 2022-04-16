@@ -22,7 +22,7 @@ def main():
     # You can set this logging module, so you will know when and why things do not work as expected
     logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                         level=logging.INFO)
-    
+
     # register a dispatcher to handle message: here we register an echo dispatcher
     echo_handler = MessageHandler(Filters.text & (~Filters.command), echo)
     dispatcher.add_handler(echo_handler)
@@ -30,6 +30,7 @@ def main():
     # on different commands - answer in Telegram
     dispatcher.add_handler(CommandHandler("add", add))
     dispatcher.add_handler(CommandHandler("help", help_command))
+    dispatcher.add_handler(CommandHandler("hello", hello))
 
 
     # To start the bot:
@@ -48,12 +49,12 @@ def echo(update, context):
 # context. Error handlers also receive the raised TelegramError object in error.
 def help_command(update: Update, context: CallbackContext) -> None:
     """Send a message when the command /help is issued."""
-    update.message.reply_text('Helping you helping you.')
+    update.message.reply_text('command: /help, /add, /hello')
 
 
 def add(update: Update, context: CallbackContext) -> None:
     """Send a message when the command /add is issued."""
-    try: 
+    try:
         global redis1
         logging.info(context.args[0])
         msg = context.args[0]   # /add keyword <-- this should store the keyword
@@ -61,6 +62,15 @@ def add(update: Update, context: CallbackContext) -> None:
         update.message.reply_text('You have said ' + msg +  ' for ' + redis1.get(msg).decode('UTF-8') + ' times.')
     except (IndexError, ValueError):
         update.message.reply_text('Usage: /add <keyword>')
+
+def hello(update: Update, context: CallbackContext) -> None:
+    """Send a message when the command /hello is issued."""
+    try:
+        logging.info(context.args[0])
+        msg = context.args[0]   # /add keyword <-- this should store the keyword
+        update.message.reply_text('Good day, ' + msg + '!')
+    except (IndexError, ValueError):
+        update.message.reply_text('Usage: /hello <keyword>')
 
 
 
