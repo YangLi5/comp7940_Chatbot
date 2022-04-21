@@ -36,7 +36,6 @@ def main():
     # on different commands - answer in Telegram
     dispatcher.add_handler(CommandHandler("help", help_command))
     dispatcher.add_handler(CommandHandler("news", news))
-    dispatcher.add_handler(CommandHandler("review_comments", reviewcomments_command))
     dispatcher.add_handler(CommandHandler("comment", comment_command))
     
 
