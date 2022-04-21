@@ -11,16 +11,16 @@ def get_news_from_keyword(keyword):
     response = json.loads(response)['articles']
 
     return_list=[]
+    url_list=[]
     for r in response:
         source=r['source']['name']
         author=r['author']
         title=r['title']
         url=r['url']
+        url_list.append(str(url))
         return_list.append('\n\nAgency: '+str(source)+'\nAuthor :'+str(author)+'\nTitle: '+title+'\n\nread here: '+str(url))
     
     if len(return_list)>5:
-        return return_list[:5]
+        return url_list,return_list[:5]
     
-    return return_list
-
-    return return_list
+    return url_list,return_list

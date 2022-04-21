@@ -36,6 +36,9 @@ def main():
     # on different commands - answer in Telegram
     dispatcher.add_handler(CommandHandler("help", help_command))
     dispatcher.add_handler(CommandHandler("news", news))
+    dispatcher.add_handler(CommandHandler("review_comments", reviewcomments_command))
+    dispatcher.add_handler(CommandHandler("comment", comment_command))
+    
 
 #Chen Zixin 
     dispatcher.add_handler(CommandHandler("food", food_command))
@@ -70,35 +73,41 @@ def news(update: Update, context: CallbackContext) -> None:
     try:
         logging.info(context.args[0])
         msg = context.args[0]   # /add keyword <-- this should store the keyword
-        news_list = get_news_from_keyword(msg)
-        for news in news_list:
-            update.message.reply_text(news)
+        global news_list
+        news_list = get_news_from_keyword(msg)[1]
+        for i in range(0,len(news_list)):
+            update.message.reply_text('Index' + i)
+            update.message.reply_text(news_list[i])
+            global index
+            index = i
+        update.message.reply_text('You can view or comment each news by typing /review_comments or /comment <index> of the news')
     except (IndexError, ValueError):
         update.message.reply_text('Usage: /news <keyword>')
 
-def reviewcomments(update: Update, context: CallbackContext) -> None:
+def reviewcomments_command(update: Update, context: CallbackContext) -> None:
     """Send a message when the command /review_commants is issued."""
     try:
         logging.info(context.args[0])
         msg = context.args[0]   # /add keyword <-- this should store the keyword
-        news_list = get_news_from_keyword(msg)
-        for news in news_list:
-            update.message.reply_text(news)
+        try: 
+            key = news_list[0][int(msg)]
+            r = firebase.get('/comments/'+key, None)
+        except:update.message.reply_text('Invalid input. Usage: /review_comments <number>')
     except (IndexError, ValueError):
         update.message.reply_text('Usage: /review_comments <keyword>')
-        r=firebase.get('/comments',None)
 
-def comment(update: Update, context: CallbackContext) -> None:
-    """Send a message when the command /commant is issued."""
+def comment_command(update: Update, context: CallbackContext) -> None:
+    """Send a message when the command /comment is issued."""
     try:
         logging.info(context.args[0])
         msg = context.args[0]   # /add keyword <-- this should store the keyword
-        news_list = get_news_from_keyword(msg)
-        for news in news_list:
-            update.message.reply_text(news)
+        try: 
+            news_list[int[msg]]
+            key = news_list[0]
+            r = firebase.post('/comments/'+key, None)
+        except:update.message.reply_text('Invalid input. Usage: /review_comments <number>')
     except (IndexError, ValueError):
         update.message.reply_text('Usage: /comment <keyword>')
-        r=firebase.get('/comments',None)
 
 def twentyfour_command(update:Update, context:CallbackContext)->None:
     update.message.reply_text('Welcome to game 24 point!')
