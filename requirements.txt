@@ -1,5 +1,4 @@
 telegram
 python-telegram-bot>=13.1
-redis
 bs4
 git+https://github.com/ozgur/python-firebase

@@ -4,7 +4,6 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, Callb
 import os
 # import configparser
 import logging
-import redis
 import requests
 
 from news_file import get_news_from_keyword
@@ -18,8 +17,6 @@ from firebase import firebase
 firebase = firebase.FirebaseApplication(os.environ['FireBase_url'], None)
 #Chen Zixin 
 
-global redis1
-
 def main():
     # Load your token and create an Updater for your Bot
     
@@ -28,8 +25,6 @@ def main():
     updater = Updater(token=(os.environ['ACCESS_TOKEN']), use_context=True)
     dispatcher = updater.dispatcher
 
-    global redis1
-    redis1 = redis.Redis(host=(os.environ['HOST']), password=(os.environ['PASSWORD']), port=(os.environ['REDISPORT']))
     # You can set this logging module, so you will know when and why things do not work as expected
     logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                         level=logging.INFO)
@@ -92,6 +87,7 @@ def hello(update: Update, context: CallbackContext) -> None:
         update.message.reply_text('Usage: /hello <keyword>')
 
 def news(update: Update, context: CallbackContext) -> None:
+    """Send a message when the command /news is issued."""
     try:
         logging.info(context.args[0])
         msg = context.args[0]   # /add keyword <-- this should store the keyword
@@ -100,11 +96,6 @@ def news(update: Update, context: CallbackContext) -> None:
             update.message.reply_text(news)
     except (IndexError, ValueError):
         update.message.reply_text('Usage: /news <keyword>')
-
-
-
-
-
 
 def twentyfour_command(update:Update, context:CallbackContext)->None:
     update.message.reply_text('Welcome to game 24 point!')
