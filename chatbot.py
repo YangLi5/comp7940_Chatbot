@@ -33,7 +33,7 @@ def main():
     dispatcher.add_handler(CommandHandler("add", add))
     dispatcher.add_handler(CommandHandler("help", help_command))
     dispatcher.add_handler(CommandHandler("hello", hello))
-    dispatcher.add_handler(CommandHandler("news", hello))
+    dispatcher.add_handler(CommandHandler("news", news))
 
 
     # To start the bot:
