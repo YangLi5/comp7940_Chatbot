@@ -93,10 +93,12 @@ def comment_command(update: Update, context: CallbackContext) -> None:
         comment = context.args[1]
         try: 
             url = news_list[0][int[msg]]
-            firebase.put('/comments/'+url, str(comment))
-        except:update.message.reply_text('Invalid input. Usage: /review_comments <number>')
+            firebase.put('/comments/'+url, "hello")
+            update.message.reply_text('Comment Successfuly')
+        except:
+            update.message.reply_text('Invalid Comment. Usage: /comment <number> <comment>')
     except (IndexError, ValueError):
-        update.message.reply_text('Usage: /comment <keyword>')
+        update.message.reply_text('Invalid input. Usage: /comment <keyword> <comment>')
 
 def twentyfour_command(update:Update, context:CallbackContext)->None:
     update.message.reply_text('Welcome to game 24 point!')
