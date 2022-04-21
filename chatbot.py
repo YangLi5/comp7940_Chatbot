@@ -76,7 +76,7 @@ def news(update: Update, context: CallbackContext) -> None:
         global news_list
         news_list = get_news_from_keyword(msg)[1]
         for i in range(0,len(news_list)):
-            update.message.reply_text('Index' + i)
+            update.message.reply_text('Index' + str(i))
             update.message.reply_text(news_list[i])
             global index
             index = i
