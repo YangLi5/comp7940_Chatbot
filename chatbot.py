@@ -7,7 +7,7 @@ import logging
 import redis
 import requests
 
-from news_file import get_news_from_keyword, get_news_from_topic
+from news_file import get_news_from_keyword
 
 global redis1
 
