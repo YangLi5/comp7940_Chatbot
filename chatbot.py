@@ -1,13 +1,13 @@
-from typing import Callable, Any
 from telegram import Update
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
 
 import os
 # import configparser
 import logging
-import datanews
-import re
 import redis
+import requests
+
+from news_file import get_news_from_keyword, get_news_from_topic
 
 global redis1
 
@@ -21,7 +21,6 @@ def main():
 
     global redis1
     redis1 = redis.Redis(host=(os.environ['HOST']), password=(os.environ['PASSWORD']), port=(os.environ['REDISPORT']))
-
     # You can set this logging module, so you will know when and why things do not work as expected
     logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                         level=logging.INFO)
@@ -34,6 +33,7 @@ def main():
     dispatcher.add_handler(CommandHandler("add", add))
     dispatcher.add_handler(CommandHandler("help", help_command))
     dispatcher.add_handler(CommandHandler("hello", hello))
+    dispatcher.add_handler(CommandHandler("news", hello))
 
 
     # To start the bot:
@@ -52,14 +52,7 @@ def echo(update, context):
 # context. Error handlers also receive the raised TelegramError object in error.
 def help_command(update: Update, context: CallbackContext) -> None:
     """Send a message when the command /help is issued."""
-    update.message.reply_markdown('''This bot allows you to query news articles from Datanews API.
-Available commands:
-/help, /start - show this help message.
-/{SEARCH_COMMAND} <query> - retrieve news articles containing <query>.
-   Example: "/{SEARCH_COMMAND} covid"
-/{PUBLISHER_COMMAND} <domain> - retrieve newest articles from <publisher>.
-   Example: "/{PUBLISHER_COMMAND} techcrunch.com"
-''')
+    update.message.reply_text('command: /help, /add, /hello')
 
 
 def add(update: Update, context: CallbackContext) -> None:
@@ -82,26 +75,15 @@ def hello(update: Update, context: CallbackContext) -> None:
     except (IndexError, ValueError):
         update.message.reply_text('Usage: /hello <keyword>')
 
-def _fetch_data(update: Update, context: CallbackContext, fetcher: Callable[[str], Any]) -> None:
-    if not context.args:
-        help_command(update, context)
-        return
-
-    query = '"' + ' '.join(context.args) + '"'
-    result = fetcher(query)
-
-    if result['status'] == 401:
-        update.message.reply_text('API key is invalid')
-        return
-
-    if not result['hits']:
-        update.message.reply_text('No news is good news')
-        return
-
-    last_message = update.message
-    for article in reversed(result['hits']):
-        text = article['title'] + ': ' + article['url']
-        last_message = last_message.reply_text(text)
-
+def news(update: Update, context: CallbackContext) -> None:
+    try:
+        logging.info(context.args[0])
+        msg = context.args[0]   # /add keyword <-- this should store the keyword
+        news_list = get_news_from_keyword(msg)
+        for news in news_list:
+            update.message.reply_text(news)
+    except (IndexError, ValueError):
+        update.message.reply_text('Usage: /hello <keyword>')
+    
 if __name__ == '__main__':
     main()
