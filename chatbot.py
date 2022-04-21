@@ -172,7 +172,7 @@ def twentyfour(cards):
                 except ZeroDivisionError: # 零除错误！
                     continue
     
-    return 'Not found!'
+    return False
 
 
 def food_command(update:Update, context:CallbackContext)->None:
