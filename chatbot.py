@@ -45,6 +45,8 @@ def main():
     dispatcher.add_handler(CommandHandler("gamename", gamename_command))
     dispatcher.add_handler(CommandHandler("yes", yes_command))
     dispatcher.add_handler(CommandHandler("no", no_command))
+    dispatcher.add_handler(CommandHandler("24ranking", ranking_command))
+
 #Chen Zixin 
 
     # To start the bot:
@@ -100,6 +102,7 @@ def news(update: Update, context: CallbackContext) -> None:
 def twentyfour_command(update:Update, context:CallbackContext)->None:
     update.message.reply_text('Welcome to game 24 point!')
     update.message.reply_text('Enter your game name by /gamename')
+    update.message.reply_text('View ranking by enter /24ranking')
     #update.message.reply_text(number)
     #update.message.reply_text(ans)
 
@@ -143,6 +146,13 @@ def no_command(update:Update, context:CallbackContext)->None:
         firebase.put('/gamename',name,str(timeuse))
     if ans !=False:
         update.message.reply_text('You lose!')
+
+def ranking_command(update:Update, context:CallbackContext)->None:
+    r=firebase.get('/gamename',None)
+    for k, v in r.items():
+        r[k] = float(v)
+    r={k: v for k,v in sorted(r.items(), key=lambda item: item[1])}
+    update.message.reply_text(r)
 
 
 
