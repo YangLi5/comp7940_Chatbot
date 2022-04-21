@@ -77,9 +77,11 @@ def news(update: Update, context: CallbackContext) -> None:
         for i in range(0,len(news_list)):
             update.message.reply_text('Index ' + str(i))
             update.message.reply_text(news_list[i])
-            update.message.reply_text("Comment:")
-            #firebase.get('/comments/'+news_list[0][i], None)
-        update.message.reply_text('You cancomment each news by typing /review_comments or /comment <index> of the news')
+            try: 
+                update.message.reply_text('Comment: '+ firebase.get('/comments/'+news_list[0][i], None))
+            except:
+                update.message.reply_text('No comment yet')
+        update.message.reply_text('You cancomment each news by typing /comment <index> of the news')
     except (IndexError, ValueError):
         update.message.reply_text('Usage: /news <keyword>')
 
@@ -90,8 +92,7 @@ def comment_command(update: Update, context: CallbackContext) -> None:
         msg = context.args[0]   # /add keyword <-- this should store the keyword
         comment = context.args[1]
         try: 
-            news_list[int[msg]]
-            url = news_list[0][index]
+            url = news_list[0][int[msg]]
             firebase.put('/comments/'+url, str(comment))
         except:update.message.reply_text('Invalid input. Usage: /review_comments <number>')
     except (IndexError, ValueError):
