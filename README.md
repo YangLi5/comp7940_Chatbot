@@ -18,8 +18,3 @@ Cooking is a difficult task for someone who has never cooked before. People can 
 2. Game:24 point
 This is a classic little game where you get 4 numbers between 1 and 10 and add, subtract, multiply and divide to get the number 24.Your time will be recorded and you can compete with others for ranking.
 ```
-
-## Job division:
-
-
-Zixin Chen: Connect the project to the Firebase database; Add function Search for food making videos and Game:24 point
