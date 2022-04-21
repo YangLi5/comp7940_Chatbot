@@ -83,7 +83,6 @@ def news(update: Update, context: CallbackContext) -> None:
         for news in news_list:
             update.message.reply_text(news)
     except (IndexError, ValueError):
-        update.message.reply_text('Usage: /hello <keyword>')
-    
+        update.message.reply_text('Usage: /news <keyword>')
 if __name__ == '__main__':
     main()
