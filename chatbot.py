@@ -1,3 +1,4 @@
+from operator import index
 from telegram import Update
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
 
@@ -36,7 +37,7 @@ def main():
     # on different commands - answer in Telegram
     dispatcher.add_handler(CommandHandler("help", help_command))
     dispatcher.add_handler(CommandHandler("news", news))
-    dispatcher.add_handler(CommandHandler("comment", comment_command))
+    dispatcher.add_handler(CommandHandler("comment_news", comment_news_command))
     
 
 #Chen Zixin 
@@ -81,24 +82,38 @@ def news(update: Update, context: CallbackContext) -> None:
                 update.message.reply_text('Comment: '+ firebase.get('/comments/'+news_list[0][i], None))
             except:
                 update.message.reply_text('No comment yet')
-        update.message.reply_text('You cancomment each news by typing /comment <index> of the news')
+        update.message.reply_text('You cancomment each news by typing /comment_news <index> of the news')
     except (IndexError, ValueError):
         update.message.reply_text('Usage: /news <keyword>')
+
+def comment_news_command(update: Update, context: CallbackContext) -> None:
+    """Send a message when the command /comment is issued."""
+    try:
+        logging.info(context.args[0])
+        msg = context.args[0]   # /add keyword <-- this should store the keyword
+        try: 
+            global a_news
+            a_news = news_list[int[msg]]
+            logging.info(a_news)
+            update.message.reply_text('You selected news '+ msg)
+        except:
+            update.message.reply_text('Invalid comment. Usage: /comment_news <number>')
+    except (IndexError, ValueError):
+        update.message.reply_text('Invalid input. Usage: /comment_news <keyword>')
 
 def comment_command(update: Update, context: CallbackContext) -> None:
     """Send a message when the command /comment is issued."""
     try:
         logging.info(context.args[0])
         msg = context.args[0]   # /add keyword <-- this should store the keyword
-        comment = context.args[1]
         try: 
-            url = news_list[0][int[msg]]
-            firebase.put('/comments/'+url, "hello")
-            update.message.reply_text('Comment Successfuly')
+            global a_news
+            a_news = news_list[int[msg]]
+            update.message.reply_text('You selected news '+ msg)
         except:
-            update.message.reply_text('Invalid Comment. Usage: /comment <number> <comment>')
+            update.message.reply_text('Invalid comment. Usage: /comment <comment>')
     except (IndexError, ValueError):
-        update.message.reply_text('Invalid input. Usage: /comment <keyword> <comment>')
+        update.message.reply_text('Invalid input. Usage: /comment <comment>')
 
 def twentyfour_command(update:Update, context:CallbackContext)->None:
     update.message.reply_text('Welcome to game 24 point!')
