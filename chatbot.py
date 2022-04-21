@@ -34,9 +34,7 @@ def main():
     dispatcher.add_handler(echo_handler)
 
     # on different commands - answer in Telegram
-    dispatcher.add_handler(CommandHandler("add", add))
     dispatcher.add_handler(CommandHandler("help", help_command))
-    dispatcher.add_handler(CommandHandler("hello", hello))
     dispatcher.add_handler(CommandHandler("news", news))
 
 #Chen Zixin 
@@ -67,27 +65,6 @@ def help_command(update: Update, context: CallbackContext) -> None:
     """Send a message when the command /help is issued."""
     update.message.reply_text('command: /help, /add, /hello')
 
-
-def add(update: Update, context: CallbackContext) -> None:
-    """Send a message when the command /add is issued."""
-    try:
-        global redis1
-        logging.info(context.args[0])
-        msg = context.args[0]   # /add keyword <-- this should store the keyword
-        redis1.incr(msg)
-        update.message.reply_text('You have said ' + msg +  ' for ' + redis1.get(msg).decode('UTF-8') + ' times.')
-    except (IndexError, ValueError):
-        update.message.reply_text('Usage: /add <keyword>')
-
-def hello(update: Update, context: CallbackContext) -> None:
-    """Send a message when the command /hello is issued."""
-    try:
-        logging.info(context.args[0])
-        msg = context.args[0]   # /add keyword <-- this should store the keyword
-        update.message.reply_text('Good day, ' + msg + '!')
-    except (IndexError, ValueError):
-        update.message.reply_text('Usage: /hello <keyword>')
-
 def news(update: Update, context: CallbackContext) -> None:
     """Send a message when the command /news is issued."""
     try:
@@ -98,6 +75,30 @@ def news(update: Update, context: CallbackContext) -> None:
             update.message.reply_text(news)
     except (IndexError, ValueError):
         update.message.reply_text('Usage: /news <keyword>')
+
+def reviewcomments(update: Update, context: CallbackContext) -> None:
+    """Send a message when the command /review_commants is issued."""
+    try:
+        logging.info(context.args[0])
+        msg = context.args[0]   # /add keyword <-- this should store the keyword
+        news_list = get_news_from_keyword(msg)
+        for news in news_list:
+            update.message.reply_text(news)
+    except (IndexError, ValueError):
+        update.message.reply_text('Usage: /review_comments <keyword>')
+        r=firebase.get('/comments',None)
+
+def comment(update: Update, context: CallbackContext) -> None:
+    """Send a message when the command /commant is issued."""
+    try:
+        logging.info(context.args[0])
+        msg = context.args[0]   # /add keyword <-- this should store the keyword
+        news_list = get_news_from_keyword(msg)
+        for news in news_list:
+            update.message.reply_text(news)
+    except (IndexError, ValueError):
+        update.message.reply_text('Usage: /comment <keyword>')
+        r=firebase.get('/comments',None)
 
 def twentyfour_command(update:Update, context:CallbackContext)->None:
     update.message.reply_text('Welcome to game 24 point!')
