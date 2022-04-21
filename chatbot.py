@@ -37,7 +37,6 @@ def main():
     # on different commands - answer in Telegram
     dispatcher.add_handler(CommandHandler("help", help_command))
     dispatcher.add_handler(CommandHandler("news", news))
-    dispatcher.add_handler(CommandHandler("comment_news", comment_news_command))
     
 
 #Chen Zixin 
@@ -66,7 +65,7 @@ def echo(update, context):
 # context. Error handlers also receive the raised TelegramError object in error.
 def help_command(update: Update, context: CallbackContext) -> None:
     """Send a message when the command /help is issued."""
-    update.message.reply_text('command: /help, /add, /hello')
+    update.message.reply_text('command: /help, /news, /food, /24')
 
 def news(update: Update, context: CallbackContext) -> None:
     """Send a message when the command /news is issued."""
@@ -82,35 +81,8 @@ def news(update: Update, context: CallbackContext) -> None:
                 update.message.reply_text('Comment: '+ firebase.get('/comments/'+news_list[0][i], None))
             except:
                 update.message.reply_text('No comment yet')
-        update.message.reply_text('You cancomment each news by typing /comment_news <index> of the news')
     except (IndexError, ValueError):
         update.message.reply_text('Usage: /news <keyword>')
-
-def comment_news_command(update: Update, context: CallbackContext) -> None:
-    """Send a message when the command /comment is issued."""
-    try:
-        logging.info(context.args[0])
-        msg = context.args[0]   # /add keyword <-- this should store the keyword 
-        global a_news
-        a_news = news_list[int[msg]]
-        logging.info(a_news)
-        update.message.reply_text('You selected news '+ msg)
-    except (IndexError, ValueError):
-        update.message.reply_text('Invalid input. Usage: /comment_news <keyword>')
-
-def comment_command(update: Update, context: CallbackContext) -> None:
-    """Send a message when the command /comment is issued."""
-    try:
-        logging.info(context.args[0])
-        msg = context.args[0]   # /add keyword <-- this should store the keyword
-        try: 
-            global a_news
-            a_news = news_list[int[msg]]
-            update.message.reply_text('You selected news '+ msg)
-        except:
-            update.message.reply_text('Invalid comment. Usage: /comment <comment>')
-    except (IndexError, ValueError):
-        update.message.reply_text('Invalid input. Usage: /comment <comment>')
 
 def twentyfour_command(update:Update, context:CallbackContext)->None:
     update.message.reply_text('Welcome to game 24 point!')
