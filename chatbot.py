@@ -79,7 +79,7 @@ def news(update: Update, context: CallbackContext) -> None:
             update.message.reply_text('Index ' + str(i))
             update.message.reply_text(news_list[i])
             try: 
-                update.message.reply_text('Comment: '+ firebase.get('/comments/'+news_list[0][i], None))
+                update.message.reply_text('Comment: '+ firebase.get('/gamename',None))
             except:
                 update.message.reply_text('No comment yet')
         update.message.reply_text('You cancomment each news by typing /comment_news <index> of the news')
