@@ -78,8 +78,8 @@ def news(update: Update, context: CallbackContext) -> None:
         for i in range(0,len(news_list)):
             update.message.reply_text('Index ' + str(i))
             update.message.reply_text(news_list[i])
-            try: 
-                update.message.reply_text('Comment: '+ firebase.get('/gamename',None))
+            try:
+                update.message.reply_text('Comment: '+ firebase.get('/comments/'+news_list[0][i], None))
             except:
                 update.message.reply_text('No comment yet')
         update.message.reply_text('You cancomment each news by typing /comment_news <index> of the news')
@@ -90,14 +90,11 @@ def comment_news_command(update: Update, context: CallbackContext) -> None:
     """Send a message when the command /comment is issued."""
     try:
         logging.info(context.args[0])
-        msg = context.args[0]   # /add keyword <-- this should store the keyword
-        try: 
-            global a_news
-            a_news = news_list[int[msg]]
-            logging.info(a_news)
-            update.message.reply_text('You selected news '+ msg)
-        except:
-            update.message.reply_text('Invalid comment. Usage: /comment_news <number>')
+        msg = context.args[0]   # /add keyword <-- this should store the keyword 
+        global a_news
+        a_news = news_list[int[msg]]
+        logging.info(a_news)
+        update.message.reply_text('You selected news '+ msg)
     except (IndexError, ValueError):
         update.message.reply_text('Invalid input. Usage: /comment_news <keyword>')
 
