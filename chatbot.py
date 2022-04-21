@@ -76,35 +76,25 @@ def news(update: Update, context: CallbackContext) -> None:
         global news_list
         news_list = get_news_from_keyword(msg)[1]
         for i in range(0,len(news_list)):
-            update.message.reply_text('Index' + str(i))
+            update.message.reply_text('Index ' + str(i))
             update.message.reply_text(news_list[i])
+            update.message.reply_text("Commnet:" + firebase.get('/comments/'+news_list[0][i], None))
             global index
             index = i
-        update.message.reply_text('You can view or comment each news by typing /review_comments or /comment <index> of the news')
+        update.message.reply_text('You cancomment each news by typing /review_comments or /comment <index> of the news')
     except (IndexError, ValueError):
         update.message.reply_text('Usage: /news <keyword>')
-
-def reviewcomments_command(update: Update, context: CallbackContext) -> None:
-    """Send a message when the command /review_commants is issued."""
-    try:
-        logging.info(context.args[0])
-        msg = context.args[0]   # /add keyword <-- this should store the keyword
-        try: 
-            key = news_list[0][int(msg)]
-            r = firebase.get('/comments/'+key, None)
-        except:update.message.reply_text('Invalid input. Usage: /review_comments <number>')
-    except (IndexError, ValueError):
-        update.message.reply_text('Usage: /review_comments <keyword>')
 
 def comment_command(update: Update, context: CallbackContext) -> None:
     """Send a message when the command /comment is issued."""
     try:
         logging.info(context.args[0])
         msg = context.args[0]   # /add keyword <-- this should store the keyword
+        comment = context.args[1]
         try: 
             news_list[int[msg]]
-            key = news_list[0]
-            r = firebase.post('/comments/'+key, None)
+            url = news_list[0][index]
+            firebase.post('/comments/'+url, str(comment))
         except:update.message.reply_text('Invalid input. Usage: /review_comments <number>')
     except (IndexError, ValueError):
         update.message.reply_text('Usage: /comment <keyword>')
