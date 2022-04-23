@@ -6,7 +6,8 @@
 > @Group33Chat_bot
 ## Member: 
 >Group number: 33
->Yang Li [@YangLi5](https://github.com/YangLi5), 
+
+>Yang Li [@YangLi5](https://github.com/YangLi5)
 
 >Zixin Chen [@zich9801](https://github.com/zich9801)
 ## Commands for bots:
