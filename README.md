@@ -5,7 +5,7 @@
 ### Telegram Bot name: 
 > @Group33Chat_bot
 ## Member: 
-
+>Group number: 33
 >Yang Li [@YangLi5](https://github.com/YangLi5), 
 
 >Zixin Chen [@zich9801](https://github.com/zich9801)
@@ -17,4 +17,7 @@ Cooking is a difficult task for someone who has never cooked before. People can 
 
 2. Game:24 point
 This is a classic little game where you get 4 numbers between 1 and 10 and add, subtract, multiply and divide to get the number 24.Your time will be recorded and you can compete with others for ranking.
+
+3. News:
+Show news and comments with certain keywords /new <keyword>
 ```
